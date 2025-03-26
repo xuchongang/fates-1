@@ -117,7 +117,7 @@ def main():
                 for i in range(var.shape[0]):
                     var[i] = outputval[i]
             elif(ndim_file==0):
-                var.assignValue(outputval[0])
+                var.data[...]= outputval[0] #modified by Chonggang Xu to avoid the dimesion mismatch error
 
             else:
                 print("Unhandled dimension size in modify_fates_paramfile.py")

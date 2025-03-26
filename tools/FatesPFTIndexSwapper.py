@@ -193,7 +193,9 @@ def main(argv):
         # Tedious, but I have to permute through all combinations of dimension position
         if( pft_dim_len == 0 ):
             out_var = fp_out.createVariable(key,'d',(fp_in.variables.get(key).dimensions))
-            out_var.assignValue(float(fp_in.variables.get(key).data))
+            scalar_value = float(fp_in.variables.get(key).data) #modified by Chonggang Xu to avoid the dimensional mismatch
+            out_var.data[...] = scalar_value
+            #out_var.assignValue(float(fp_in.variables.get(key).data))
         elif( (pft_dim_found==-1) & (prt_dim_found==-1) & (litt_dim_found==-1) & (hydro_dim_found==-1)  ):
             out_var = fp_out.createVariable(key,'d',(fp_in.variables.get(key).dimensions))
             out_var[:] = in_var[:]

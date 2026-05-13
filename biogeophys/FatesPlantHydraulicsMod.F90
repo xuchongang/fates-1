@@ -4671,6 +4671,51 @@ function xylemtaper_savage(pexp, dz) result(chi_tapnotap)
 
 end function xylemtaper_savage
 
+# =====================================================================================
+# xylem hydraulic conductance  following scaling for conduit width from Olson 2020 (https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.16961)
+function xylemtaper(a, L) result(ratio)
+
+  implicit none
+
+  real(r8), intent(in) :: a      ! taper exponent
+  real(r8), intent(in) :: L      ! distance from branch tip (m)
+  real(r8) :: ratio
+
+  real(r8), parameter :: x0  = 0.005_r8  ! finite cutoff (m) at petiole, to prevent singularity in function at L=0.  
+  real(r8), parameter :: eps = 1.e-8_r8
+  real(r8), parameter :: xref = 0.6_r8    ! measurement distance from branch tip (m)
+
+  real(r8) :: Leff
+  real(r8) :: expo
+  real(r8) :: denom
+
+  !------------------------------------------------------------
+  ! Enforce finite cutoff 
+  !------------------------------------------------------------
+  Leff = max(L, x0 * (1._r8 + eps))
+
+  !------------------------------------------------------------
+  ! No taper case
+  !------------------------------------------------------------
+  if (a <= 0._r8) then
+     ratio = 1._r8
+     return
+  end if
+
+  !------------------------------------------------------------
+  ! Critical case: a = 1/4
+  !------------------------------------------------------------
+  if (abs(a - 0.25_r8) < eps) then
+     ratio = (Leff - x0) / (xref * log(Leff / x0))
+  else
+     expo  = 1._r8 - 4._r8 * a
+     denom = xref**(4._r8 * a) * (Leff**expo - x0**expo)
+
+     ratio = (Leff - x0) * expo / denom
+  end if
+
+end function xylemtaper
+
 ! =====================================================================================
 
 subroutine Hydraulics_Tridiagonal(a, b, c, r, u, ierr)

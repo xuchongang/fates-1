@@ -4611,7 +4611,7 @@ end subroutine shellGeom
 
 ! =====================================================================================
 
-function xylemtaper(pexp, dz) result(chi_tapnotap)
+function xylemtaper_savage(pexp, dz) result(chi_tapnotap)
 
     use FatesConstantsMod, only : pi => pi_const
 
@@ -4669,7 +4669,7 @@ function xylemtaper(pexp, dz) result(chi_tapnotap)
 
     return
 
-end function xylemtaper
+end function xylemtaper_savage
 
 ! =====================================================================================
 
